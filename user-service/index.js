@@ -1,8 +1,12 @@
-const dotenv = require('dotenv').config()
+const dotenv = require('dotenv')
+dotenv.config()
 
 const express = require('express')
 const app = express()
 const port = 3000
+
+app.use(express.json())
+const Router = require('./routes')
 
 const mongoose = require('mongoose');
 const DB_USER = process.env.DB_USER
@@ -11,32 +15,14 @@ const URL_MONGO = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster0.qu1ssig.mong
 
 async function connectToMongo() {
   await mongoose.connect(URL_MONGO)
-                  .then(() => console.log('Connected to MongoDB'));
+                  .then(() => console.log('Connected to MongoDB'))
+                  .catch(err => console.log(err));
 }
 
 async function main() {
   await connectToMongo();
 
-  const userSchema = new mongoose.Schema({
-    name: String,
-    email: String,
-    password: String,
-  });
-  
-  const User = mongoose.model('user', userSchema);
-
-  const user = new User({
-    name: 'John',
-    email: 'john@gmail.com',
-    password: '123456',
-  });
-
-  await user.save();
-  console.log('User created');
-
-  app.get('/', (req, res) => {
-    res.send('Hello World!')
-  })
+  app.use(Router)
   
   app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)

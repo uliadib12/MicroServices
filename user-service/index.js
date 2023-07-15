@@ -6,7 +6,6 @@ const app = express()
 const port = 3000
 
 app.use(express.json())
-const Router = require('./routes')
 
 const mongoose = require('mongoose');
 const DB_USER = process.env.DB_USER
@@ -19,10 +18,12 @@ async function connectToMongo() {
                   .catch(err => console.log(err));
 }
 
+const authRoutes = require('./routes/auth_routes')
+
 async function main() {
   await connectToMongo();
 
-  app.use(Router)
+  app.use(authRoutes)
   
   app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)

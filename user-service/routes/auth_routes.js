@@ -1,10 +1,10 @@
 const express = require("express")
 const router = express.Router()
 
-const JWT = require('./utils/JWT');
+const JWT = require('../utils/JWT');
 
 router.get('/users', async (req, res) => {
-    const User = require('./models/users');
+    const User = require('../models/users');
     const users = await User.find();
 
     const filteredUsers = users.map(user => {
@@ -24,7 +24,7 @@ router.post('/register', async (req, res) => {
     }
     catch(err){
         if(user != null){
-            const User = require('./models/users')
+            const User = require('.../models/users')
             await User.deleteOne({ _id: user.userIdForToken })
         }
         return
@@ -39,7 +39,7 @@ router.post('/login', async (req, res) => {
         return res.status(400).send('Missing fields')
         }
         
-        const User = require('./models/users');
+        const User = require('../models/users');
 
         const user = await User.findOne({ email });
 
@@ -116,7 +116,7 @@ async function saveUsertoDB(req){
     const argon2 = require('argon2')
     const hashedPassword = await argon2.hash(password)
     
-    const User = require('./models/users')
+    const User = require('../models/users')
     const user = new User({
         username,
         email,
